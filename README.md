@@ -37,17 +37,26 @@
 ### Install
 ##### Creating bot
 Create bot https://discord.com/developers/applications?new_application=true
+
 Bot settings: 
+
 PUBLIC BOT - off
+
 PRESENCE INTENT - on
+
 MESSAGE CONTENT INTENT - on
+
 Invite url: https://discord.com/api/oauth2/authorize?client_id=APPLICATION_ID&permissions=0&scope=bot
 
 ##### env
 DISCORD_TOKEN - Discord developer bot page "Settings->bot->reset token" (https://discord.com/developers/applications/APPLICATION_ID/bot)
+
 DISCORD_CHANNEL_ID - In Discord server create forum channel and RMB copy id
+
 GITHUB_ACCESS_TOKEN - "Settings->developer->personal acccess tokens" https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+
 GITHUB_USERNAME - example: https://github.com/<GITHUB_USERNAME>/<GITHUB_REPOSITORY>
+
 GITHUB_REPOSITORY
 
 ##### Start bot
