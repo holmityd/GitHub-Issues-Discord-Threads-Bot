@@ -1,0 +1,35 @@
+{
+  "name": "gitbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node .",
+    "build": "tsup src/index.ts --minify",
+    "format": "prettier --write \"**/*.{json,ts}\"",
+    "lint": "eslint . --ext ts --fix"
+  },
+  "author": "Nicat",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/graphql": "^7.0.2",
+    "@octokit/rest": "^20.0.2",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.5.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.1.1",
+    "tsup": "^8.0.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
