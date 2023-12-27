@@ -1,12 +1,12 @@
 # Discord-Github Issues Integration
 
-This Discord bot serves as a seamless bridge between Discord channels and GitHub repositories, enabling efficient issue management and synchronization between the two platforms. This integration allows for efficient project management, ensuring that actions performed on either Discord or GitHub are reflected in both platforms, facilitating smoother collaboration and issue tracking across teams.
+This Discord bot serves as a seamless bridge between Discord thread channel and GitHub repository issues, enabling efficient issue management and synchronization between the two platforms. This integration allows for efficient project management, ensuring that actions performed on either Discord or GitHub are reflected in both platforms, facilitating smoother collaboration and issue tracking across teams.
 
 ## Functionality Overview
 
 #### Issues
 
--   [x] Discord Post Creation -> Automatically generates a corresponding GitHub issue.
+-   \[x] Discord Post Creation -> Automatically generates a corresponding GitHub issue.
 -   [ ] GitHub Issue Creation -> Pending feature: Creation of Discord posts from GitHub issues.
 
 #### Comments
