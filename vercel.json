@@ -2,10 +2,10 @@
   "version": 2,
   "functions": {
     "api/**/*.js": {
-      "runtime": "@vercel/node"
+      "runtime": "@now/node"
     },
     "dist/index.js": {
-      "runtime": "@vercel/node"
+      "runtime": "@now/node"
     }
   },
   "routes": [
