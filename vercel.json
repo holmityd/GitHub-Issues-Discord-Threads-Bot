@@ -15,13 +15,5 @@
       "src": "/dist/index.js",
       "dest": "/dist/index.js"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "@vercel/node"
-    }
-  }
+  ]
 }
