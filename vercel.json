@@ -1,27 +1,8 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "dist/index.js",
-      "use": "@vercel/node"
+      "source": "/(.*)",
+      "destination": "/"
     }
-  ],
-  "routes": [
-    {
-      "src": "/dist/index.js",
-      "dest": "/dist/index.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "@vercel/node"
-    }
-  }
+  ]
 }
