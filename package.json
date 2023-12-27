@@ -2,15 +2,13 @@
   "name": "gitbot",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "api/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "start": "node dist/index.js",
-    "vercel-build": "yarn install && yarn build",
-    "build": "tsup src/index.ts --minify",
+    "start": "node api/index.js",
+    "build": "tsup src/index.ts --minify --outDir api",
     "format": "prettier --write \"**/*.{json,ts}\"",
-    "lint": "eslint . --ext ts --fix",
-    "postinstall": "yarn run build"
+    "lint": "eslint . --ext ts --fix"
   },
   "author": "Nicat",
   "license": "MIT",
