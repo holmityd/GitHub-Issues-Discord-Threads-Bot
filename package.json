@@ -2,11 +2,11 @@
   "name": "gitbot",
   "version": "1.0.0",
   "description": "",
-  "main": "api/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "start": "node api/index.js",
-    "build": "tsup src/index.ts --minify --outDir api",
+    "start": "node .",
+    "build": "tsup src/index.ts --minify",
     "format": "prettier --write \"**/*.{json,ts}\"",
     "lint": "eslint . --ext ts --fix"
   },
