@@ -48,9 +48,8 @@ Create bot https://discord.com/developers/applications?new_application=true
 
 Bot settings:
 
--  PUBLIC BOT - off
--  PRESENCE INTENT - on
--  MESSAGE CONTENT INTENT - on
+-   \[x] PRESENCE INTENT
+-   \[x] MESSAGE CONTENT INTENT
 
 Invite url: https://discord.com/api/oauth2/authorize?client_id=APPLICATION_ID&permissions=0&scope=bot
 
