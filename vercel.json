@@ -1,3 +1,9 @@
 {
-  "public": false
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/index.js",
+      "use": "@now/node"
+    }
+  ]
 }
