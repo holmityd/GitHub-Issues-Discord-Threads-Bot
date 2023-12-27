@@ -7,38 +7,38 @@ This Discord bot serves as a seamless bridge between Discord thread channel and 
 #### Issues
 
 -   \[x] Discord Post Creation -> Automatically generates a corresponding GitHub issue.
--   [ ] GitHub Issue Creation -> Pending feature: Creation of Discord posts from GitHub issues.
+-   \[ ] GitHub Issue Creation -> Pending feature: Creation of Discord posts from GitHub issues.
 
 #### Comments
 
--   [x] Discord Post Comments -> Mirrored as comments on associated GitHub issues.
--   [ ] GitHub Issue Comments -> Pending feature: Synchronization with Discord post comments.
+-   \[x] Discord Post Comments -> Mirrored as comments on associated GitHub issues.
+-   \[ ] GitHub Issue Comments -> Pending feature: Synchronization with Discord post comments.
 
 #### Tags & Labels
 
--   [x] Discord Post Tags -> Translated into GitHub issue labels for better categorization.
--   [ ] Discord Post Tag Changes -> Future implementation: Update GitHub issue labels from Discord.
--   [ ] GitHub Issue Label Changes -> Future implementation: Reflect changes in Discord post tags from GitHub.
+-   \[x] Discord Post Tags -> Translated into GitHub issue labels for better categorization.
+-   \[ ] Discord Post Tag Changes -> Future implementation: Update GitHub issue labels from Discord.
+-   \[ ] GitHub Issue Label Changes -> Future implementation: Reflect changes in Discord post tags from GitHub.
 
 #### Locking & Unlocking
 
--   [x] Discord Post Lock/Unlock -> Corresponding action on GitHub issues for security or access control.
--   [ ] GitHub Issue Lock/Unlock -> Pending feature: Syncing locking status with Discord posts.
+-   \[x] Discord Post Lock/Unlock -> Corresponding action on GitHub issues for security or access control.
+-   \[ ] GitHub Issue Lock/Unlock -> Pending feature: Syncing locking status with Discord posts.
 
 #### Open/Close Management
 
--   [x] Discord Post Open/Close -> Triggers opening or closing of related GitHub issues.
--   [ ] GitHub Issue Open/Close -> Future enhancement: Update Discord post status based on GitHub issue status.
+-   \[x] Discord Post Open/Close -> Triggers opening or closing of related GitHub issues.
+-   \[ ] GitHub Issue Open/Close -> Future enhancement: Update Discord post status based on GitHub issue status.
 
 #### Deletion Actions
 
--   [x] Discord Post Deletion -> Initiates the removal of the associated GitHub issue.
--   [ ] GitHub Issue Deletion -> Planned: Sync deletion actions from GitHub to Discord posts.
+-   \[x] Discord Post Deletion -> Initiates the removal of the associated GitHub issue.
+-   \[ ] GitHub Issue Deletion -> Planned: Sync deletion actions from GitHub to Discord posts.
 
 #### Attachment Support
 
--   [x] Supported File Types: png, jpeg
--   [ ] Planned Support: gif, text, video
+-   \[x] Supported File Types: png, jpeg
+-   \[ ] Planned Support: gif, text, video
 
 ## Installation Steps
 
