@@ -1,9 +1,6 @@
 {
   "version": 2,
   "functions": {
-    "api/**/*.js": {
-      "runtime": "@vercel/node@1.10.0"
-    },
     "dist/index.js": {
       "runtime": "@vercel/node@1.10.0"
     }
