@@ -28,3 +28,21 @@ client.on(Events.MessageCreate, handleMessageCreate);
 client.on(Events.ThreadDelete, handleThreadDelete);
 
 client.login(config.DISCORD_TOKEN);
+
+// ===================================================================
+import express from "express";
+const app = express();
+
+app.get("", (req, res) => {
+  res.json(JSON.stringify({ msg: "test" }));
+});
+
+app.post("/", (req, res) => {
+  console.log(req.body);
+  res.sendStatus(200);
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
