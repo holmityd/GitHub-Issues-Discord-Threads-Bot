@@ -1,4 +1,4 @@
-# Discord-Github Issues Integration
+# Managing GitHub Issues via Discord Threads
 
 This Discord bot serves as a seamless bridge between Discord thread channel and GitHub repository issues, enabling efficient issue management and synchronization between the two platforms. This integration allows for efficient project management, ensuring that actions performed on either Discord or GitHub are reflected in both platforms, facilitating smoother collaboration and issue tracking across teams.
 
