@@ -1,13 +1,27 @@
 {
-  "functions": {
-    "dist/index.js": {
-      "memory": 1024
-    }
-  },
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "dist/index.js"
+      "src": "package.json",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dist/index.js",
+      "use": "@vercel/node"
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/dist/index.js",
+      "dest": "/dist/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "@vercel/node"
+    }
+  }
 }
