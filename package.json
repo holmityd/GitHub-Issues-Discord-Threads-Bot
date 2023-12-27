@@ -9,7 +9,8 @@
     "vercel-build": "yarn install && yarn build",
     "build": "tsup src/index.ts --minify",
     "format": "prettier --write \"**/*.{json,ts}\"",
-    "lint": "eslint . --ext ts --fix"
+    "lint": "eslint . --ext ts --fix",
+    "postinstall": "yarn run build"
   },
   "author": "Nicat",
   "license": "MIT",
