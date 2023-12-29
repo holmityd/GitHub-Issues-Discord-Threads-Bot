@@ -7,6 +7,8 @@ interface Thread {
   node_id?: string;
   archived: boolean | null;
   locked: boolean | null;
+  lockArchiving?: boolean;
+  lockLocking?: boolean;
 }
 
 interface GitIssue {

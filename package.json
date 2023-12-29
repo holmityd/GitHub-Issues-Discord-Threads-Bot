@@ -8,7 +8,8 @@
     "start": "node .",
     "build": "tsup src/index.ts --minify",
     "format": "prettier --write \"**/*.{json,ts}\"",
-    "lint": "eslint . --ext ts --fix"
+    "lint": "eslint . --ext ts --fix",
+    "forward": "ssh -R 80:localhost:5000 serveo.net"
   },
   "author": "Nicat",
   "license": "MIT",

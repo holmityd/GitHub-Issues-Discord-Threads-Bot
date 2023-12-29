@@ -14,23 +14,27 @@ export const githubActions: {
     console.log("comment created", req.body);
   },
   closed: async (req) => {
-    const { channel } = await getThreadChannel(req);
-    if (!channel || channel.archived) return;
+    const { thread, channel } = await getThreadChannel(req);
+    if (!thread || !channel || channel.archived) return;
     console.log("github->discord", "close");
+    thread.archived = true;
     channel.setArchived(true);
   },
   reopened: async (req) => {
-    const { channel } = await getThreadChannel(req);
-    if (!channel || !channel.archived) return;
+    const { thread, channel } = await getThreadChannel(req);
+    if (!thread || !channel || !channel.archived) return;
     console.log("github->discord", "open");
+    thread.archived = false;
     channel.setArchived(false);
   },
   locked: async (req) => {
     const { thread, channel } = await getThreadChannel(req);
     if (!thread || !channel || channel.locked) return;
     console.log("github->discord", "lock");
-    // TODO - fix archived issue locking
+    thread.locked = true;
     if (channel.archived) {
+      thread.lockArchiving = true;
+      thread.lockLocking = true;
       channel.setArchived(false);
       channel.setLocked(true);
       channel.setArchived(true);
@@ -42,7 +46,10 @@ export const githubActions: {
     const { thread, channel } = await getThreadChannel(req);
     if (!thread || !channel || !channel.locked) return;
     console.log("github->discord", "unlock");
+    thread.locked = false;
     if (channel.archived) {
+      thread.lockArchiving = true;
+      thread.lockLocking = true;
       channel.setArchived(false);
       channel.setLocked(false);
       channel.setArchived(true);

@@ -27,7 +27,6 @@ export async function handleClientReady(client: Client) {
 
   // Fetch cache for closed threads
   store.threads.forEach((thread) => {
-    // console.log(thread.id);
     const cachedChannel = <ThreadChannel | undefined>(
       client.channels.cache.get(thread.id)
     );
@@ -62,7 +61,6 @@ export async function handleThreadCreate(params: AnyThreadChannel) {
 export async function handleChannelUpdate(
   params: DMChannel | NonThreadGuildBasedChannel,
 ) {
-  console.log("puk srenk");
   if (params.id !== config.DISCORD_CHANNEL_ID) return;
 
   if (params.type === 15) {
@@ -78,13 +76,26 @@ export async function handleThreadUpdate(params: AnyThreadChannel) {
   if (!thread?.number) return;
 
   const { number } = thread;
-  if (thread?.archived !== archived) {
-    thread.archived = archived;
-    archived ? closeIssue(number) : openIssue(number);
-  }
-  if (thread?.locked !== locked) {
+  if (thread.locked !== locked && !thread.lockLocking) {
+    if (thread.archived) {
+      thread.lockArchiving = true;
+    }
     thread.locked = locked;
     locked ? lockIssue(number) : unlockIssue(number);
+  }
+  if (thread.archived !== archived) {
+    setTimeout(() => {
+      // timeout for fixing discord archived post locking
+      if (thread.lockArchiving) {
+        if (archived) {
+          thread.lockArchiving = false;
+        }
+        thread.lockLocking = false;
+        return;
+      }
+      thread.archived = archived;
+      archived ? closeIssue(number) : openIssue(number);
+    }, 500);
   }
 }
 
