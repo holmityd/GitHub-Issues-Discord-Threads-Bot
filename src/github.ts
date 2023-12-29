@@ -5,6 +5,13 @@ import { GitIssue, Thread } from "./interfaces";
 import { store } from "./store";
 
 import { Attachment, Collection, Message } from "discord.js";
+import {
+  ActionValue,
+  Actions,
+  Triggerer,
+  getGithubUrl,
+  logger,
+} from "./logger";
 
 const octokit = new Octokit({
   auth: config.GITHUB_ACCESS_TOKEN,
@@ -21,6 +28,9 @@ const repoCredentials = {
   owner: config.GITHUB_USERNAME,
   repo: config.GITHUB_REPOSITORY,
 };
+
+const info = (action: ActionValue, thread: Thread) =>
+  logger.info(`${Triggerer.Discord} | ${action} | ${getGithubUrl(thread)}`);
 
 function update(issue_number: number, state: "open" | "closed") {
   octokit.rest.issues.update({
@@ -80,29 +90,45 @@ function formatIssuesToThreads(issues: GitIssue[]): Thread[] {
   return res;
 }
 
-export function closeIssue(threadNumber: number) {
-  console.log("discord->github", "close");
-  update(threadNumber, "closed");
+export function closeIssue(thread: Thread) {
+  const { number } = thread;
+  if (!number) return;
+
+  info(Actions.Closed, thread);
+
+  update(number, "closed");
 }
 
-export function openIssue(threadNumber: number) {
-  console.log("discord->github", "open");
-  update(threadNumber, "open");
+export function openIssue(thread: Thread) {
+  const { number } = thread;
+  if (!number) return;
+
+  info(Actions.Reopened, thread);
+
+  update(number, "open");
 }
 
-export function lockIssue(threadNumber: number) {
-  console.log("discord->github", "lock");
+export function lockIssue(thread: Thread) {
+  const { number } = thread;
+  if (!number) return;
+
+  info(Actions.Locked, thread);
+
   octokit.rest.issues.lock({
     ...repoCredentials,
-    issue_number: threadNumber,
+    issue_number: number,
   });
 }
 
-export function unlockIssue(threadNumber: number) {
-  console.log("discord->github", "unlock");
+export function unlockIssue(thread: Thread) {
+  const { number } = thread;
+  if (!number) return;
+
+  info(Actions.Unlocked, thread);
+
   octokit.rest.issues.unlock({
     ...repoCredentials,
-    issue_number: threadNumber,
+    issue_number: number,
   });
 }
 
@@ -113,7 +139,6 @@ export function createIssue(thread: Thread, params: Message) {
   );
 
   const body = getIssueBody(params);
-
   octokit.rest.issues
     .create({
       ...repoCredentials,
@@ -125,7 +150,8 @@ export function createIssue(thread: Thread, params: Message) {
       thread.node_id = res.data.node_id;
       thread.body = res.data.body!;
       thread.number = res.data.number;
-      console.log(`Issue created: ${res.data.html_url}`);
+
+      info(Actions.Created, thread);
     });
 }
 
@@ -138,19 +164,23 @@ export function createIssueComment(thread: Thread, params: Message) {
       issue_number: thread.number!,
       body,
     })
-    .then((res) => {
-      console.log(`Issue created: ${res.data.html_url}`);
+    .then(() => {
+      info(Actions.Commented, thread);
     });
 }
 
-export function deleteIssue(issueId: string) {
-  console.log("discord->github", "delete");
+export function deleteIssue(thread: Thread) {
+  const { node_id } = thread;
+  if (!node_id) return;
+
+  info(Actions.Deleted, thread);
+
   try {
     graphqlWithAuth(
-      `mutation {deleteIssue(input: {issueId: "${issueId}"}) {clientMutationId}}`,
+      `mutation {deleteIssue(input: {issueId: "${node_id}"}) {clientMutationId}}`,
     );
   } catch (error) {
-    console.error("Error deleting issue:", error);
+    // error("Error deleting issue:", error);
   }
 }
 

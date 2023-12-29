@@ -19,9 +19,10 @@ import {
   unlockIssue,
 } from "./github";
 import { store } from "./store";
+import { logger } from "./logger";
 
 export async function handleClientReady(client: Client) {
-  console.log(`Logged in as ${client.user?.tag}!`);
+  logger.info(`Logged in as ${client.user?.tag}!`);
 
   store.threads = await getIssues();
 
@@ -38,7 +39,7 @@ export async function handleClientReady(client: Client) {
     }
   });
 
-  console.log("Issues loaded :", store.threads.length);
+  logger.info(`Issues loaded : ${store.threads.length}`);
 
   client.channels.fetch(config.DISCORD_CHANNEL_ID).then((params) => {
     store.availableTags = (params as ForumChannel).availableTags;
@@ -73,15 +74,14 @@ export async function handleThreadUpdate(params: AnyThreadChannel) {
 
   const { id, archived, locked } = params.members.thread;
   const thread = store.threads.find((item) => item.id === id);
-  if (!thread?.number) return;
+  if (!thread) return;
 
-  const { number } = thread;
   if (thread.locked !== locked && !thread.lockLocking) {
     if (thread.archived) {
       thread.lockArchiving = true;
     }
     thread.locked = locked;
-    locked ? lockIssue(number) : unlockIssue(number);
+    locked ? lockIssue(thread) : unlockIssue(thread);
   }
   if (thread.archived !== archived) {
     setTimeout(() => {
@@ -94,7 +94,7 @@ export async function handleThreadUpdate(params: AnyThreadChannel) {
         return;
       }
       thread.archived = archived;
-      archived ? closeIssue(number) : openIssue(number);
+      archived ? closeIssue(thread) : openIssue(thread);
     }, 500);
   }
 }
@@ -117,7 +117,7 @@ export async function handleThreadDelete(params: AnyThreadChannel) {
   if (params.parentId !== config.DISCORD_CHANNEL_ID) return;
 
   const thread = store.threads.find((item) => item.id === params.id);
-  if (!thread?.node_id) return;
+  if (!thread) return;
 
-  deleteIssue(thread.node_id);
+  deleteIssue(thread);
 }
