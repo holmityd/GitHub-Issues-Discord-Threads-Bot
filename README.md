@@ -23,17 +23,17 @@ This Discord bot serves as a seamless bridge between Discord thread channel and 
 #### Locking & Unlocking
 
 -   \[x] Discord Post Lock/Unlock -> Corresponding action on GitHub issues for security or access control.
--   \[ ] GitHub Issue Lock/Unlock -> Pending feature: Syncing locking status with Discord posts.
+-   \[x] GitHub Issue Lock/Unlock -> Syncing locking status with Discord posts.
 
 #### Open/Close Management
 
 -   \[x] Discord Post Open/Close -> Triggers opening or closing of related GitHub issues.
--   \[ ] GitHub Issue Open/Close -> Future enhancement: Update Discord post status based on GitHub issue status.
+-   \[x] GitHub Issue Open/Close -> Update Discord post status based on GitHub issue status.
 
 #### Deletion Actions
 
 -   \[x] Discord Post Deletion -> Initiates the removal of the associated GitHub issue.
--   \[ ] GitHub Issue Deletion -> Planned: Sync deletion actions from GitHub to Discord posts.
+-   \[x] GitHub Issue Deletion -> Sync deletion actions from GitHub to Discord posts.
 
 #### Attachment Support
 
@@ -71,4 +71,9 @@ or
 
 ```bash
 npm run build && npm run start
+```
+
+Forward for github webhooks:
+```bash
+ssh -R 80:localhost:5000 serveo.net
 ```

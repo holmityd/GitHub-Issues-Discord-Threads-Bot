@@ -61,25 +61,37 @@ function getIssueBody(params: Message) {
 function formatIssuesToThreads(issues: GitIssue[]): Thread[] {
   const regex = /Thread: \[#(\d+)\]/;
   const res: Thread[] = [];
-  issues.forEach(({ title, body, number, node_id }) => {
+  issues.forEach(({ title, body, number, node_id, locked, state }) => {
     const match = body.match(regex);
     if (match) {
       const id = match[1];
-      res.push({ id, title, number, body, node_id, appliedTags: [] });
+      res.push({
+        id,
+        title,
+        number,
+        body,
+        node_id,
+        locked,
+        appliedTags: [],
+        archived: state === "closed",
+      });
     }
   });
   return res;
 }
 
 export function closeIssue(threadNumber: number) {
+  console.log("discord->github", "close");
   update(threadNumber, "closed");
 }
 
 export function openIssue(threadNumber: number) {
+  console.log("discord->github", "open");
   update(threadNumber, "open");
 }
 
 export function lockIssue(threadNumber: number) {
+  console.log("discord->github", "lock");
   octokit.rest.issues.lock({
     ...repoCredentials,
     issue_number: threadNumber,
@@ -87,6 +99,7 @@ export function lockIssue(threadNumber: number) {
 }
 
 export function unlockIssue(threadNumber: number) {
+  console.log("discord->github", "unlock");
   octokit.rest.issues.unlock({
     ...repoCredentials,
     issue_number: threadNumber,
@@ -131,6 +144,7 @@ export function createIssueComment(thread: Thread, params: Message) {
 }
 
 export function deleteIssue(issueId: string) {
+  console.log("discord->github", "delete");
   try {
     graphqlWithAuth(
       `mutation {deleteIssue(input: {issueId: "${issueId}"}) {clientMutationId}}`,
@@ -143,7 +157,7 @@ export function deleteIssue(issueId: string) {
 export async function getIssues() {
   const result = await octokit.rest.issues.listForRepo({
     ...repoCredentials,
-    state: "open",
+    state: "all",
   });
 
   return formatIssuesToThreads(result.data as GitIssue[]);

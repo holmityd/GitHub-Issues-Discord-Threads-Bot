@@ -5,6 +5,8 @@ interface Thread {
   number?: number;
   body?: string;
   node_id?: string;
+  archived: boolean | null;
+  locked: boolean | null;
 }
 
 interface GitIssue {
@@ -12,6 +14,8 @@ interface GitIssue {
   body: string;
   number: number;
   node_id: string;
+  locked: boolean;
+  state: "open" | "closed";
 }
 
 export { Thread, GitIssue };

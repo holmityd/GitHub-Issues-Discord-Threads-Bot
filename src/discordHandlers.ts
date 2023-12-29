@@ -5,6 +5,7 @@ import {
   ForumChannel,
   Message,
   NonThreadGuildBasedChannel,
+  ThreadChannel,
 } from "discord.js";
 import { config } from "./config";
 import {
@@ -24,6 +25,20 @@ export async function handleClientReady(client: Client) {
 
   store.threads = await getIssues();
 
+  // Fetch cache for closed threads
+  store.threads.forEach((thread) => {
+    // console.log(thread.id);
+    const cachedChannel = <ThreadChannel | undefined>(
+      client.channels.cache.get(thread.id)
+    );
+    cachedChannel?.messages.cache.map((message) => message.id);
+    if (!cachedChannel) {
+      client.channels.fetch(thread.id).then((ch) => {
+        (ch as ThreadChannel).messages.cache.map((message) => message.id);
+      });
+    }
+  });
+
   console.log("Issues loaded :", store.threads.length);
 
   client.channels.fetch(config.DISCORD_CHANNEL_ID).then((params) => {
@@ -35,12 +50,19 @@ export async function handleThreadCreate(params: AnyThreadChannel) {
   if (params.parentId !== config.DISCORD_CHANNEL_ID) return;
 
   const { id, name, appliedTags } = params;
-  store.threads.push({ id, appliedTags, title: name });
+  store.threads.push({
+    id,
+    appliedTags,
+    title: name,
+    archived: false,
+    locked: false,
+  });
 }
 
 export async function handleChannelUpdate(
   params: DMChannel | NonThreadGuildBasedChannel,
 ) {
+  console.log("puk srenk");
   if (params.id !== config.DISCORD_CHANNEL_ID) return;
 
   if (params.type === 15) {
@@ -56,10 +78,12 @@ export async function handleThreadUpdate(params: AnyThreadChannel) {
   if (!thread?.number) return;
 
   const { number } = thread;
-  if (params.archived != archived) {
+  if (thread?.archived !== archived) {
+    thread.archived = archived;
     archived ? closeIssue(number) : openIssue(number);
   }
-  if (params.locked != locked) {
+  if (thread?.locked !== locked) {
+    thread.locked = locked;
     locked ? lockIssue(number) : unlockIssue(number);
   }
 }
