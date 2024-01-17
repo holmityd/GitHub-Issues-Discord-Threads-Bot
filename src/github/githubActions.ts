@@ -3,7 +3,6 @@ import { Octokit } from "@octokit/rest";
 import { config } from "../config";
 import { GitIssue, Thread } from "../interfaces";
 import { store } from "../store";
-
 import { Attachment, Collection, Message } from "discord.js";
 import {
   ActionValue,
@@ -12,6 +11,7 @@ import {
   getGithubUrl,
   logger,
 } from "../logger";
+import client from "../discord/discord";
 
 export const octokit = new Octokit({
   auth: config.GITHUB_ACCESS_TOKEN,
@@ -56,7 +56,7 @@ function attachmentsToMarkdown(attachments: Collection<string, Attachment>) {
 function getIssueBody(params: Message) {
   const { guildId, channelId, content, author, attachments } = params;
   const { username, id } = author;
-  const bot = store.client?.user;
+  const bot = client.user;
 
   return (
     `${content}\n` +

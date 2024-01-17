@@ -1,6 +1,6 @@
-import { Hono } from "hono";
 import { serve } from "@hono/node-server";
-
+import { Hono } from "hono";
+import { GithubHandlerFunction } from "../interfaces";
 import {
   handleClosed,
   handleCreated,
@@ -10,7 +10,6 @@ import {
   handleReopened,
   handleUnlocked,
 } from "./githubHandlers";
-import { GithubHandlerFunction } from "../interfaces";
 
 const app = new Hono();
 

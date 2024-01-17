@@ -1,6 +1,5 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import { config } from "../config";
-import { store } from "../store";
 import {
   handleChannelUpdate,
   handleClientReady,
@@ -18,7 +17,6 @@ const client = new Client({
     GatewayIntentBits.DirectMessages,
   ],
 });
-store.client = client;
 
 export function initDiscord() {
   client.once(Events.ClientReady, handleClientReady);
