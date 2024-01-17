@@ -1,8 +1,8 @@
 import { graphql } from "@octokit/graphql";
 import { Octokit } from "@octokit/rest";
-import { config } from "./config";
-import { GitIssue, Thread } from "./interfaces";
-import { store } from "./store";
+import { config } from "../config";
+import { GitIssue, Thread } from "../interfaces";
+import { store } from "../store";
 
 import { Attachment, Collection, Message } from "discord.js";
 import {
@@ -11,7 +11,7 @@ import {
   Triggerer,
   getGithubUrl,
   logger,
-} from "./logger";
+} from "../logger";
 
 export const octokit = new Octokit({
   auth: config.GITHUB_ACCESS_TOKEN,
@@ -208,6 +208,7 @@ export function getComments() {
           issue_url.slice(issue_url.lastIndexOf("/") + 1),
         );
         const thread = store.threads.find((thread) => thread.number === number);
+        console.log(node_id, thread);
         // thread?.messages.push({node_id});
       });
     });

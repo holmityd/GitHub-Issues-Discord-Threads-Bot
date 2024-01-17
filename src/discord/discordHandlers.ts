@@ -7,7 +7,7 @@ import {
   NonThreadGuildBasedChannel,
   ThreadChannel,
 } from "discord.js";
-import { config } from "./config";
+import { config } from "../config";
 import {
   closeIssue,
   createIssue,
@@ -17,9 +17,9 @@ import {
   lockIssue,
   openIssue,
   unlockIssue,
-} from "./github";
-import { store } from "./store";
-import { logger } from "./logger";
+} from "../github/githubActions";
+import { logger } from "../logger";
+import { store } from "../store";
 
 export async function handleClientReady(client: Client) {
   logger.info(`Logged in as ${client.user?.tag}!`);
@@ -28,7 +28,6 @@ export async function handleClientReady(client: Client) {
 
   // Fetch cache for closed threads
   store.threads.forEach((thread) => {
-    console.log(thread);
     const cachedChannel = <ThreadChannel | undefined>(
       client.channels.cache.get(thread.id)
     );

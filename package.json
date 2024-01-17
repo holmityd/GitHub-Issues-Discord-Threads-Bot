@@ -14,11 +14,12 @@
   "author": "Nicat",
   "license": "MIT",
   "dependencies": {
+    "@hono/node-server": "^1.4.0",
     "@octokit/graphql": "^7.0.2",
     "@octokit/rest": "^20.0.2",
     "discord.js": "^14.14.1",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2",
+    "hono": "^3.12.5",
     "winston": "^3.11.0"
   },
   "devDependencies": {
