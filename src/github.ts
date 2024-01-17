@@ -13,7 +13,7 @@ import {
   logger,
 } from "./logger";
 
-const octokit = new Octokit({
+export const octokit = new Octokit({
   auth: config.GITHUB_ACCESS_TOKEN,
   baseUrl: "https://api.github.com",
 });
@@ -24,7 +24,7 @@ const graphqlWithAuth = graphql.defaults({
   },
 });
 
-const repoCredentials = {
+export const repoCredentials = {
   owner: config.GITHUB_USERNAME,
   repo: config.GITHUB_REPOSITORY,
 };
@@ -133,7 +133,9 @@ export function unlockIssue(thread: Thread) {
 }
 
 export function createIssue(thread: Thread, params: Message) {
-  const { title, appliedTags } = thread;
+  const { title, appliedTags, number } = thread;
+  if (number) return;
+
   const labels = appliedTags?.map(
     (id) => store.availableTags.find((item) => item.id === id)?.name || "",
   );
@@ -190,5 +192,23 @@ export async function getIssues() {
     state: "all",
   });
 
+  // console.log(res2);
+
   return formatIssuesToThreads(result.data as GitIssue[]);
+}
+
+export function getComments() {
+  octokit.rest.issues
+    .listCommentsForRepo({
+      ...repoCredentials,
+    })
+    .then(({ data }) => {
+      data.map(({ issue_url, node_id }) => {
+        const number = parseInt(
+          issue_url.slice(issue_url.lastIndexOf("/") + 1),
+        );
+        const thread = store.threads.find((thread) => thread.number === number);
+        // thread?.messages.push({node_id});
+      });
+    });
 }

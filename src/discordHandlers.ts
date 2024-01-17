@@ -28,6 +28,7 @@ export async function handleClientReady(client: Client) {
 
   // Fetch cache for closed threads
   store.threads.forEach((thread) => {
+    console.log(thread);
     const cachedChannel = <ThreadChannel | undefined>(
       client.channels.cache.get(thread.id)
     );
@@ -44,12 +45,18 @@ export async function handleClientReady(client: Client) {
   client.channels.fetch(config.DISCORD_CHANNEL_ID).then((params) => {
     store.availableTags = (params as ForumChannel).availableTags;
   });
+
+  // octokit.rest.issues.list({
+  //   ...repoCredentials,
+
+  // })
 }
 
 export async function handleThreadCreate(params: AnyThreadChannel) {
   if (params.parentId !== config.DISCORD_CHANNEL_ID) return;
 
   const { id, name, appliedTags } = params;
+
   store.threads.push({
     id,
     appliedTags,
@@ -100,7 +107,10 @@ export async function handleThreadUpdate(params: AnyThreadChannel) {
 }
 
 export async function handleMessageCreate(params: Message) {
-  const { channelId } = params;
+  const { channelId, author } = params;
+  const { username, discriminator } = author;
+
+  if (store.client?.user?.tag === `${username}#${discriminator}`) return;
 
   const thread = store.threads.find((thread) => thread.id === channelId);
 

@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { store } from "./store";
-import { ThreadChannel } from "discord.js";
-import { Thread } from "./interfaces";
+import { ForumChannel, ThreadChannel } from "discord.js";
+import { GitHubLabel, Thread } from "./interfaces";
 import {
   ActionValue,
   Actions,
@@ -9,6 +9,7 @@ import {
   getDiscordUrl,
   logger,
 } from "./logger";
+import { config } from "./config";
 
 const info = (action: ActionValue, thread: Thread) =>
   logger.info(`${Triggerer.Github} | ${action} | ${getDiscordUrl(thread)}`);
@@ -17,11 +18,43 @@ export const githubActions: {
   // eslint-disable-next-line no-unused-vars
   [key: string]: (req: Request) => void;
 } = {
-  opened: () => {
-    // log("issue created", req.body);
+  opened: (req) => {
+    if (!req.body?.issue) return;
+    const { node_id, number, title, user, body, labels } = req.body.issue;
+    if (store.threads.some((thread) => thread.node_id === node_id)) return;
+
+    const { login } = user;
+    const appliedTags = (<GitHubLabel[]>labels)
+      .map(
+        (label) =>
+          store.availableTags.find((tag) => tag.name === label.name)?.id || "",
+      )
+      .filter((i) => i);
+
+    const forum = store.client?.channels.cache.get(
+      config.DISCORD_CHANNEL_ID,
+    ) as ForumChannel;
+    forum.threads
+      .create({
+        message: {
+          content: body + "/" + login, // TODO
+        },
+        name: title,
+        appliedTags,
+      })
+      .then(({ id }) => {
+        const thread = store.threads.find((thread) => thread.id === id);
+        if (!thread) return;
+
+        thread.body = body;
+        thread.node_id = node_id;
+        thread.number = number;
+
+        info(Actions.Created, thread);
+      });
   },
-  created: () => {
-    // log("comment created", req.body);
+  created: (req) => {
+    console.log("comment created", req.body);
   },
   closed: async (req) => {
     const { thread, channel } = await getThreadChannel(req);

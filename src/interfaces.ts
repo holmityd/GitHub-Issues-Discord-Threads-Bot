@@ -20,4 +20,14 @@ interface GitIssue {
   state: "open" | "closed";
 }
 
-export { Thread, GitIssue };
+interface GitHubLabel {
+  id: number;
+  node_id: string;
+  url: string;
+  name: string;
+  color: string;
+  default: boolean;
+  description: string;
+}
+
+export { Thread, GitIssue, GitHubLabel };
