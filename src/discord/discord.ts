@@ -4,6 +4,7 @@ import {
   handleChannelUpdate,
   handleClientReady,
   handleMessageCreate,
+  handleMessageDelete,
   handleThreadCreate,
   handleThreadDelete,
   handleThreadUpdate,
@@ -25,6 +26,7 @@ export function initDiscord() {
   client.on(Events.ChannelUpdate, handleChannelUpdate);
   client.on(Events.MessageCreate, handleMessageCreate);
   client.on(Events.ThreadDelete, handleThreadDelete);
+  client.on(Events.MessageDelete, handleMessageDelete);
 
   client.login(config.DISCORD_TOKEN);
 }

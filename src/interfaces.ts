@@ -16,7 +16,7 @@ interface Thread {
 
 interface ThreadComment {
   id: string;
-  node_id: string;
+  git_id: number;
 }
 
 interface GitIssue {

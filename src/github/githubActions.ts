@@ -165,9 +165,9 @@ export function createIssueComment(thread: Thread, params: Message) {
       body,
     })
     .then((res) => {
-      const node_id = res.data.node_id;
+      const git_id = res.data.id;
       const id = params.id;
-      thread.comments.push({ id, node_id });
+      thread.comments.push({ id, git_id });
       info(Actions.Commented, thread);
     });
 }
@@ -187,6 +187,14 @@ export function deleteIssue(thread: Thread) {
   }
 }
 
+export function deleteComment(thread: Thread, comment_id: number) {
+  octokit.rest.issues.deleteComment({
+    ...repoCredentials,
+    comment_id,
+  });
+  info(Actions.DeletedComment, thread);
+}
+
 export async function getIssues() {
   const result = await octokit.rest.issues.listForRepo({
     ...repoCredentials,
@@ -203,12 +211,13 @@ function fillCommentsData() {
       ...repoCredentials,
     })
     .then(({ data }) => {
-      data.forEach(({ body, node_id }) => {
-        const match = body?.match(regexForDiscordCredentials);
+      data.forEach((comment) => {
+        const match = comment.body?.match(regexForDiscordCredentials);
+        const git_id = comment.id;
         if (match && match.length === 4) {
           const [, , channelId, id] = match;
           const thread = store.threads.find((i) => i.id === channelId);
-          thread?.comments.push({ id, node_id });
+          thread?.comments.push({ id, git_id });
         }
       });
     });

@@ -5,6 +5,7 @@ import {
   ForumChannel,
   Message,
   NonThreadGuildBasedChannel,
+  PartialMessage,
   ThreadChannel,
 } from "discord.js";
 import { config } from "../config";
@@ -12,6 +13,7 @@ import {
   closeIssue,
   createIssue,
   createIssueComment,
+  deleteComment,
   deleteIssue,
   getIssues,
   lockIssue,
@@ -117,6 +119,18 @@ export async function handleMessageCreate(params: Message) {
   } else {
     createIssueComment(thread, params);
   }
+}
+
+export async function handleMessageDelete(params: Message | PartialMessage) {
+  const { channelId, id } = params;
+  const thread = store.threads.find((i) => i.id === channelId);
+  if (!thread) return;
+
+  const commentIndex = thread.comments.findIndex((i) => i.id === id);
+  if (commentIndex === -1) return;
+
+  const comment = thread.comments.splice(commentIndex, 1)[0];
+  deleteComment(thread, comment.git_id);
 }
 
 export async function handleThreadDelete(params: AnyThreadChannel) {

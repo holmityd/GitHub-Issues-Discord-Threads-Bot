@@ -1,7 +1,7 @@
 import winston, { format } from "winston";
-import { store } from "./store";
 import { config } from "./config";
 import { Thread } from "./interfaces";
+import client from "./discord/discord";
 
 export const logger = winston.createLogger({
   level: "info",
@@ -40,7 +40,7 @@ export const Actions = {
 export type ActionValue = (typeof Actions)[keyof typeof Actions];
 
 export const getDiscordUrl = (thread: Thread) => {
-  return `${store.client?.channels.cache.get(config.DISCORD_CHANNEL_ID)
+  return `${client.channels.cache.get(config.DISCORD_CHANNEL_ID)
     ?.url}/threads/${thread.id}`;
 };
 
