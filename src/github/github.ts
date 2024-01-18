@@ -1,5 +1,4 @@
-import { serve } from "@hono/node-server";
-import { Hono } from "hono";
+import express from "express";
 import { GithubHandlerFunction } from "../interfaces";
 import {
   handleClosed,
@@ -11,12 +10,12 @@ import {
   handleUnlocked,
 } from "./githubHandlers";
 
-const app = new Hono();
+const app = express();
+app.use(express.json());
 
 export function initGithub() {
-  app.get("", (c) => {
-    c.req;
-    return c.json(JSON.stringify({ msg: "github webhooks work" }));
+  app.get("", (_, res) => {
+    res.json({ msg: "github webhooks work" });
   });
 
   const githubActions: {
@@ -31,17 +30,15 @@ export function initGithub() {
     deleted: (req) => handleDeleted(req),
   };
 
-  app.post("/", async (c) => {
-    const body = await c.req.json();
-    const githubAction = githubActions[body.action];
-    githubAction && githubAction(c.req);
-    return c.json({ msg: "ok" });
+  app.post("/", async (req, res) => {
+    const githubAction = githubActions[req.body.action];
+    githubAction && githubAction(req);
+    res.json({ msg: "ok" });
   });
 
-  const port = parseInt(process.env.PORT + "") || 5000;
-  serve({
-    fetch: app.fetch,
-    port,
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
   });
 }
 

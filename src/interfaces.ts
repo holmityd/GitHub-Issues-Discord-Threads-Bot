@@ -1,4 +1,4 @@
-import { HonoRequest } from "hono";
+import { Request } from "express";
 
 interface Thread {
   id: string;
@@ -39,6 +39,6 @@ interface GitHubLabel {
 }
 
 // eslint-disable-next-line no-unused-vars
-type GithubHandlerFunction = (req: HonoRequest) => void;
+type GithubHandlerFunction = (req: Request) => void;
 
 export { Thread, ThreadComment, GitIssue, GitHubLabel, GithubHandlerFunction };

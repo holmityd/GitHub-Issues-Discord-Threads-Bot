@@ -1,4 +1,3 @@
-import { HonoRequest } from "hono";
 import {
   archiveThread,
   createThread,
@@ -9,16 +8,15 @@ import {
 } from "../discord/discordActions";
 import { GitHubLabel } from "../interfaces";
 import { store } from "../store";
+import { Request } from "express";
 
-async function getIssueNodeId(req: HonoRequest): Promise<string | undefined> {
-  const reqBody = await req.json();
-  return reqBody.issue.node_id;
+async function getIssueNodeId(req: Request): Promise<string | undefined> {
+  return req.body.issue.node_id;
 }
 
-export async function handleOpened(req: HonoRequest) {
-  const reqBody = await req.json();
-  if (!reqBody.issue) return;
-  const { node_id, number, title, user, body, labels } = reqBody.issue;
+export async function handleOpened(req: Request) {
+  if (!req.body.issue) return;
+  const { node_id, number, title, user, body, labels } = req.body.issue;
   if (store.threads.some((thread) => thread.node_id === node_id)) return;
 
   const { login } = user;
@@ -32,32 +30,31 @@ export async function handleOpened(req: HonoRequest) {
   createThread({ login, appliedTags, number, title, body, node_id });
 }
 
-export async function handleCreated(req: HonoRequest) {
-  const reqBody = await req.json();
-  console.log("comment created", reqBody);
+export async function handleCreated(req: Request) {
+  console.log("comment created", req.body);
 }
 
-export async function handleClosed(req: HonoRequest) {
+export async function handleClosed(req: Request) {
   const node_id = await getIssueNodeId(req);
   archiveThread(node_id);
 }
 
-export async function handleReopened(req: HonoRequest) {
+export async function handleReopened(req: Request) {
   const node_id = await getIssueNodeId(req);
   unarchiveThread(node_id);
 }
 
-export async function handleLocked(req: HonoRequest) {
+export async function handleLocked(req: Request) {
   const node_id = await getIssueNodeId(req);
   lockThread(node_id);
 }
 
-export async function handleUnlocked(req: HonoRequest) {
+export async function handleUnlocked(req: Request) {
   const node_id = await getIssueNodeId(req);
   unlockThread(node_id);
 }
 
-export async function handleDeleted(req: HonoRequest) {
+export async function handleDeleted(req: Request) {
   const node_id = await getIssueNodeId(req);
   deleteThread(node_id);
 }
