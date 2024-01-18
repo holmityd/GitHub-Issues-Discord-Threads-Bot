@@ -45,11 +45,6 @@ export async function handleClientReady(client: Client) {
   client.channels.fetch(config.DISCORD_CHANNEL_ID).then((params) => {
     store.availableTags = (params as ForumChannel).availableTags;
   });
-
-  // octokit.rest.issues.list({
-  //   ...repoCredentials,
-
-  // })
 }
 
 export async function handleThreadCreate(params: AnyThreadChannel) {
@@ -63,6 +58,7 @@ export async function handleThreadCreate(params: AnyThreadChannel) {
     title: name,
     archived: false,
     locked: false,
+    comments: [],
   });
 }
 

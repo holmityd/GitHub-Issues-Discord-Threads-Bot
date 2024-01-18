@@ -7,10 +7,16 @@ interface Thread {
   number?: number;
   body?: string;
   node_id?: string;
+  comments: ThreadComment[];
   archived: boolean | null;
   locked: boolean | null;
   lockArchiving?: boolean;
   lockLocking?: boolean;
+}
+
+interface ThreadComment {
+  id: string;
+  node_id: string;
 }
 
 interface GitIssue {
@@ -35,4 +41,4 @@ interface GitHubLabel {
 // eslint-disable-next-line no-unused-vars
 type GithubHandlerFunction = (req: HonoRequest) => void;
 
-export { Thread, GitIssue, GitHubLabel, GithubHandlerFunction };
+export { Thread, ThreadComment, GitIssue, GitHubLabel, GithubHandlerFunction };
