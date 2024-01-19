@@ -1,4 +1,4 @@
-import { ForumChannel, ThreadChannel } from "discord.js";
+import { ForumChannel, MessagePayload, ThreadChannel } from "discord.js";
 import { config } from "../config";
 import { Thread } from "../interfaces";
 import {
@@ -50,6 +50,42 @@ export function createThread({
 
       info(Actions.Created, thread);
     });
+}
+
+export async function createComment({
+  git_id,
+  body,
+  login,
+  avatar_url,
+  node_id,
+}: {
+  git_id: number;
+  body: string;
+  login: string;
+  avatar_url: string;
+  node_id: string;
+}) {
+  const { thread, channel } = await getThreadChannel(node_id);
+  if (!thread || !channel) return;
+
+  channel.parent
+    ?.createWebhook({ name: login, avatar: avatar_url })
+    .then((webhook) => {
+      const messagePayload = MessagePayload.create(webhook, {
+        content: body,
+        threadId: thread.id,
+      }).resolveBody();
+      webhook
+        .send(messagePayload)
+        .then(({ id }) => {
+          thread?.comments.push({ id, git_id });
+          webhook.delete("Cleanup");
+
+          info(Actions.Commented, thread);
+        })
+        .catch(console.error);
+    })
+    .catch(console.error);
 }
 
 export async function archiveThread(node_id: string | undefined) {

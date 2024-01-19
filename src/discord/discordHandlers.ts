@@ -22,7 +22,6 @@ import {
 } from "../github/githubActions";
 import { logger } from "../logger";
 import { store } from "../store";
-import client from "./discord";
 
 export async function handleClientReady(client: Client) {
   logger.info(`Logged in as ${client.user?.tag}!`);
@@ -106,9 +105,8 @@ export async function handleThreadUpdate(params: AnyThreadChannel) {
 
 export async function handleMessageCreate(params: Message) {
   const { channelId, author } = params;
-  const { username, discriminator } = author;
 
-  if (client.user?.tag === `${username}#${discriminator}`) return;
+  if (author.bot) return;
 
   const thread = store.threads.find((thread) => thread.id === channelId);
 

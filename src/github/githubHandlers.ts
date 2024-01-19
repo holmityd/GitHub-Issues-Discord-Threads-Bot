@@ -1,5 +1,7 @@
+import { Request } from "express";
 import {
   archiveThread,
+  createComment,
   createThread,
   deleteThread,
   lockThread,
@@ -8,7 +10,7 @@ import {
 } from "../discord/discordActions";
 import { GitHubLabel } from "../interfaces";
 import { store } from "../store";
-import { Request } from "express";
+import { getDiscordInfoFromGithubBody } from "./githubActions";
 
 async function getIssueNodeId(req: Request): Promise<string | undefined> {
   return req.body.issue.node_id;
@@ -31,7 +33,23 @@ export async function handleOpened(req: Request) {
 }
 
 export async function handleCreated(req: Request) {
-  console.log("comment created", req.body);
+  const { user, id, body } = req.body.comment;
+  const { login, avatar_url } = user;
+  const { node_id } = req.body.issue;
+
+  // Check if the comment already contains Discord info
+  if (getDiscordInfoFromGithubBody(body).channelId) {
+    // If it does, stop processing (assuming created with a bot)
+    return;
+  }
+
+  createComment({
+    git_id: id,
+    body,
+    login,
+    avatar_url,
+    node_id,
+  });
 }
 
 export async function handleClosed(req: Request) {

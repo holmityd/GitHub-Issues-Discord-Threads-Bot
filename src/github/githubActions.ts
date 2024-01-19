@@ -1,9 +1,8 @@
 import { graphql } from "@octokit/graphql";
 import { Octokit } from "@octokit/rest";
+import { Attachment, Collection, Message } from "discord.js";
 import { config } from "../config";
 import { GitIssue, Thread } from "../interfaces";
-import { store } from "../store";
-import { Attachment, Collection, Message } from "discord.js";
 import {
   ActionValue,
   Actions,
@@ -11,6 +10,7 @@ import {
   getGithubUrl,
   logger,
 } from "../logger";
+import { store } from "../store";
 
 export const octokit = new Octokit({
   auth: config.GITHUB_ACCESS_TOKEN,
@@ -65,25 +65,30 @@ function getIssueBody(params: Message) {
 
 const regexForDiscordCredentials =
   /https:\/\/discord\.com\/channels\/(\d+)\/(\d+)\/(\d+)(?=\))/;
+export function getDiscordInfoFromGithubBody(body: string) {
+  const match = body.match(regexForDiscordCredentials);
+  if (!match || match.length !== 4)
+    return { channelId: undefined, id: undefined };
+  const [, , channelId, id] = match;
+  return { channelId, id };
+}
+
 function formatIssuesToThreads(issues: GitIssue[]): Thread[] {
   const res: Thread[] = [];
   issues.forEach(({ title, body, number, node_id, locked, state }) => {
-    const match = body.match(regexForDiscordCredentials);
-    if (match && match.length === 4) {
-      const id = match[2];
-      // const [_, guildId, channelId, id] = match;
-      res.push({
-        id,
-        title,
-        number,
-        body,
-        node_id,
-        locked,
-        comments: [],
-        appliedTags: [],
-        archived: state === "closed",
-      });
-    }
+    const { id } = getDiscordInfoFromGithubBody(body);
+    if (!id) return;
+    res.push({
+      id,
+      title,
+      number,
+      body,
+      node_id,
+      locked,
+      comments: [],
+      appliedTags: [],
+      archived: state === "closed",
+    });
   });
   return res;
 }
@@ -212,13 +217,11 @@ function fillCommentsData() {
     })
     .then(({ data }) => {
       data.forEach((comment) => {
-        const match = comment.body?.match(regexForDiscordCredentials);
-        const git_id = comment.id;
-        if (match && match.length === 4) {
-          const [, , channelId, id] = match;
-          const thread = store.threads.find((i) => i.id === channelId);
-          thread?.comments.push({ id, git_id });
-        }
+        const { channelId, id } = getDiscordInfoFromGithubBody(comment.body!);
+        if (!channelId || !id) return;
+
+        const thread = store.threads.find((i) => i.id === channelId);
+        thread?.comments.push({ id, git_id: comment.id });
       });
     });
 }
